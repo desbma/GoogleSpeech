@@ -6,6 +6,7 @@ Google Speech is a simple multiplatform command line tool to read text using Goo
 
 ## Features
 
+* Support 64 different languages
 * Can read text without length limit
 * Can read text from standard input
 * Automatically pre download the next sentences while playing the current one to avoid long pauses between sentences
