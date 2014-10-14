@@ -245,7 +245,7 @@ if __name__ == "__main__":
                           choices=("warning", "normal", "debug"),
                           default="normal",
                           dest="verbosity",
-                          help="Level of output to display")
+                          help="Level of logging output")
   args = arg_parser.parse_args()
 
   # setup logger
