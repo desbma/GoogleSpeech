@@ -44,6 +44,8 @@ class PreloaderThread(threading.Thread):
 
 class Speech:
 
+  """ Text to be read. """
+
   CLEAN_MULTIPLE_SPACES_REGEX = re.compile("\s{2,}")
   MAX_SEGMENT_SIZE = 100
 
@@ -130,6 +132,8 @@ class Speech:
 
 
 class SpeechSegment:
+
+  """ Text segment to be read. """
 
   BASE_URL = "http://translate.google.com/translate_tts"
 
