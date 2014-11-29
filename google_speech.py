@@ -229,7 +229,8 @@ bin_dep.check_bin_dependency(("play",))
 
 if __name__ == "__main__":
   # parse args
-  arg_parser = argparse.ArgumentParser(description=__doc__)
+  arg_parser = argparse.ArgumentParser(description=__doc__,
+                                       formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   arg_parser.add_argument("speech",
                           help="Text to play")
   arg_parser.add_argument("-l",
