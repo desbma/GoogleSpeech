@@ -3,23 +3,31 @@
 
 import itertools
 import logging
+import socket
 import sys
 import tempfile
 import unittest
 
-import test
-import web_cache
+import google_speech.web_cache
 
 
-import google_speech
+google_speech.web_cache.DISABLE_PERSISTENT_CACHING = True
 
 
-web_cache.DISABLE_PERSISTENT_CACHING = True
+def is_internet_reachable():
+  try:
+    # open TCP socket to Google DNS server
+    socket.create_connection(("8.8.8.8", 53))
+  except OSError as e:
+    if e.errno == 101:
+      return False
+    raise
+  return True
 
 
 class TestGoogleSpeech(unittest.TestCase):
 
-  @unittest.skipUnless(test.is_internet_reachable(), "Need Internet access")
+  @unittest.skipUnless(is_internet_reachable(), "Need Internet access")
   def test_speechLoremIpsum(self):
     """ Play some reference speeches. """
     speeches = ("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",

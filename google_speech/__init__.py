@@ -3,9 +3,12 @@
 
 """ Read a text using Google API. """
 
+__version__ = "1.0.0"
+__author__ = "desbma"
+__license__ = "GPLv3"
+
 import argparse
 import collections
-import io
 import itertools
 import logging
 import re
@@ -17,9 +20,9 @@ import urllib.parse
 
 import requests
 
-import bin_dep
-import colored_logging
-import web_cache
+from . import bin_dep
+from . import colored_logging
+from . import web_cache
 
 
 SUPPORTED_LANGUAGES = ("af", "ar", "az", "be", "bg", "bn", "ca", "cs", "cy", "da", "de", "el", "en", "eo", "es", "et",
@@ -223,13 +226,9 @@ def main(text, lang, sox_effects):
   Speech(text, lang).play(sox_effects)
 
 
-# check deps
-bin_dep.check_bin_dependency(("play",))
-
-
-if __name__ == "__main__":
+def cl_main():
   # parse args
-  arg_parser = argparse.ArgumentParser(description=__doc__,
+  arg_parser = argparse.ArgumentParser(description="Google Speech v%s.%s" % (__version__, __doc__),
                                        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
   arg_parser.add_argument("speech",
                           help="Text to play")
@@ -271,3 +270,11 @@ if __name__ == "__main__":
 
   # main
   main(args.speech, args.lang, args.sox_effects)
+
+
+# check deps
+bin_dep.check_bin_dependency(("play",))
+
+
+if __name__ == "__main__":
+  cl_main()
