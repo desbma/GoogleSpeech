@@ -1,6 +1,10 @@
 Google Speech
 =============
 
+[![Latest Version](https://pypip.in/version/google_speech/badge.svg?style=flat)](https://pypi.python.org/pypi/google_speech/)
+[![Supported Python versions](https://pypip.in/py_versions/google_speech/badge.svg?style=flat)](https://pypi.python.org/pypi/google_speech/)
+[![License](https://pypip.in/license/google_speech/badge.svg?style=flat)](https://pypi.python.org/pypi/google_speech/)
+
 Google Speech is a simple multiplatform command line tool to read text using Google Translate voice.
 
 
