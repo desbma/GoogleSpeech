@@ -1,0 +1,9 @@
+language: python
+python:
+  - "3.3"
+  - "3.4"
+install:
+  - "sudo apt-get -y install libxml2-dev libxslt1-dev"  # lxml dependencies
+  - "sudo apt-get -y install sox libsox-fmt-mp3"
+  - "pip install --use-mirrors -r requirements.txt"
+script: "python setup.py tests"
