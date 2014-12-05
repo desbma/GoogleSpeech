@@ -196,8 +196,7 @@ class SpeechSegment:
     logging.getLogger().debug("Start player process")
     p = subprocess.Popen(cmd,
                          stdin=subprocess.PIPE,
-                         stdout=subprocess.DEVNULL,
-                         stderr=subprocess.DEVNULL)
+                         stdout=subprocess.DEVNULL)
     p.communicate(input=audio_data)
     if p.returncode != 0:
       raise RuntimeError()
