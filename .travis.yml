@@ -3,6 +3,6 @@ python:
   - "3.3"
   - "3.4"
 install:
-  - "sudo apt-get -y install sox libsox-fmt-mp3"
-  - "pip install --use-mirrors -r requirements.txt"
+  - "sudo modprobe -v snd-dummy"
+  - "sudo apt-get -yV install sox libsox-fmt-mp3"
 script: "python setup.py test"
