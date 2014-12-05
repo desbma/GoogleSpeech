@@ -1,6 +1,7 @@
 Google Speech
 =============
 
+[![Tests status](https://img.shields.io/travis/desbma/GoogleSpeech/master.svg?label=tests&style=flat)](https://travis-ci.org/desbma/GoogleSpeech)
 [![Latest Version](https://pypip.in/version/google_speech/badge.svg?style=flat)](https://pypi.python.org/pypi/google_speech/)
 [![Supported Python versions](https://pypip.in/py_versions/google_speech/badge.svg?style=flat)](https://pypi.python.org/pypi/google_speech/)
 [![License](https://pypip.in/license/google_speech/badge.svg?style=flat)](https://pypi.python.org/pypi/google_speech/)
