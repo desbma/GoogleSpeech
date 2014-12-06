@@ -11,7 +11,7 @@ import sys
 import time
 import unittest
 
-import mkstemp_ctx
+from . import mkstemp_ctx
 import google_speech.web_cache as web_cache
 
 
