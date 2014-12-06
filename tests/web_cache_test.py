@@ -11,8 +11,8 @@ import sys
 import time
 import unittest
 
-import sacad.mkstemp_ctx as mkstemp_ctx
-import sacad.web_cache as web_cache
+import mkstemp_ctx
+import google_speech.web_cache as web_cache
 
 
 web_cache.DISABLE_PERSISTENT_CACHING = True
