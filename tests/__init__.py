@@ -8,7 +8,7 @@ import sys
 import tempfile
 import unittest
 
-import google_speech.web_cache
+import google_speech
 
 
 google_speech.web_cache.DISABLE_PERSISTENT_CACHING = True
