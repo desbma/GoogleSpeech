@@ -256,8 +256,8 @@ def cl_main():
                    "normal": logging.INFO,
                    "debug": logging.DEBUG}
   logging.getLogger().setLevel(logging_level[args.verbosity])
-  logging.getLogger("requests").setLevel(logging.WARNING)
-  logging.getLogger("urllib3").setLevel(logging.WARNING)
+  logging.getLogger("requests").setLevel(logging.ERROR)
+  logging.getLogger("urllib3").setLevel(logging.ERROR)
   if logging_level[args.verbosity] == logging.DEBUG:
     fmt = "%(asctime)s %(threadName)s: %(message)s"
   else:
