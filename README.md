@@ -68,7 +68,7 @@ On Unix systems, with Bash and pipes, you can be creative:
 
 * Read a Chuck Norris joke:
 
-    `curl -s http://api.icndb.com/jokes/random/ | python3 -c 'import sys, json, xml.sax.saxutils; print(xml.sax.saxutils.unescape(json.load(sys.stdin)["value"]["joke"]))' | google_speech -`
+    `curl -s http://api.icndb.com/jokes/random/ | python3 -c 'import html.parser, json, sys; print(html.parser.HTMLParser().unescape(json.load(sys.stdin)["value"]["joke"]))' | google_speech -`
 
 
 ## License
