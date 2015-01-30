@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-""" Read a text using Google API. """
+""" Read a text using Google Translate TTS API. """
 
 __version__ = "1.0.3"
 __author__ = "desbma"
