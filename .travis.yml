@@ -13,3 +13,16 @@ script:
   - "coverage run --source=google_speech setup.py test"
 after_success:
   - "coveralls"
+deploy:
+  provider: pypi
+  user: desbma
+  password:
+    secure: "tjxJaCGWKWc6yPcQVsIpj+Z0wkVn5IQNIZWRkMSJ4AHSN5ZPMKzcAQtQgmRPK24h2Bi73lcCb/Ub4qDWnlHpkAubcmQciXpJWv2K1FWeD3X4TXOwWGQKBpWhK0UGwfTHhTrsv247qC3Y9m0F9qJFCIi58vWKI/XbLieBJuMYFOg="
+  on:
+    tags: true
+notifications:
+  email:
+    recipients:
+      - secure: "Vzi/yzeFX5sQ1vAmEdLzKtKDXjYvfImtGdesr7XYGC5bKL1sTY8u8qgsf6kwXIztGn/TFgisKNkjfNVZL+GH+4+Edns4nY/ujLEV0pM7WfT0+DxFzuP4yNDSa6M1u2QjZsN30qHKkqmct8kxwnZexsDGQY5YSnIUZ7rVH92y/p0="
+    on_success: always
+    on_failure: always
