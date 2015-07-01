@@ -13,6 +13,8 @@ script:
   - "coverage run --source=google_speech setup.py test"
 after_success:
   - "coveralls"
+before_deploy:
+  - "pip install pypandoc"
 deploy:
   provider: pypi
   user: desbma
