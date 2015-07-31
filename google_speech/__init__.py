@@ -19,9 +19,9 @@ import urllib.parse
 
 import requests
 
-from . import bin_dep
-from . import colored_logging
-from . import web_cache
+from google_speech import bin_dep
+from google_speech import colored_logging
+from google_speech import web_cache
 
 
 SUPPORTED_LANGUAGES = ("af", "ar", "az", "be", "bg", "bn", "ca", "cs", "cy", "da", "de", "el", "en", "eo", "es", "et",
