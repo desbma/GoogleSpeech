@@ -204,6 +204,7 @@ class SpeechSegment:
   def buildUrl(self):
     """ Construct the URL to get the sound from Goggle API. """
     params = collections.OrderedDict()
+    params["client"] = "t"
     params["ie"] = "UTF-8"
     params["idx"] = str(self.segment_num)
     if self.segment_count is not None:
