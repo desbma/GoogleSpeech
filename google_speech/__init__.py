@@ -217,7 +217,7 @@ class SpeechSegment:
   def download(self, url):
     """ Download a sound file. """
     logging.getLogger().debug("Downloading '%s'..." % (url))
-    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=5)
+    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=3.1)
     response.raise_for_status()
     return response.content
 
