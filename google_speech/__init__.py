@@ -137,7 +137,7 @@ class SpeechSegment:
 
   """ Text segment to be read. """
 
-  BASE_URL = "http://translate.google.com/translate_tts"
+  BASE_URL = "https://translate.google.com/translate_tts"
 
   def __init__(self, text, lang, segment_num, segment_count=None):
     self.text = text
