@@ -139,6 +139,8 @@ class SpeechSegment:
 
   BASE_URL = "https://translate.google.com/translate_tts"
 
+  session = requests.Session()
+
   def __init__(self, text, lang, segment_num, segment_count=None):
     self.text = text
     self.lang = lang
@@ -217,7 +219,9 @@ class SpeechSegment:
   def download(self, url):
     """ Download a sound file. """
     logging.getLogger().debug("Downloading '%s'..." % (url))
-    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=3.1)
+    response = __class__.session.get(url,
+                                     headers={"User-Agent": "Mozilla/5.0"},
+                                     timeout=3.1)
     response.raise_for_status()
     return response.content
 
