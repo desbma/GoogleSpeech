@@ -10,6 +10,7 @@ import argparse
 import collections
 import itertools
 import logging
+import os
 import re
 import subprocess
 import string
@@ -17,6 +18,7 @@ import sys
 import threading
 import urllib.parse
 
+import appdirs
 import requests
 
 from google_speech import bin_dep
@@ -148,13 +150,16 @@ class SpeechSegment:
     self.segment_count = segment_count
     self.preload_mutex = threading.Lock()
     if not hasattr(__class__, "cache"):
+      db_filepath = os.path.join(appdirs.user_cache_dir(appname="google_speech",
+                                                        appauthor=False),
+                                 "google_speech-cache.sqlite")
+      os.makedirs(os.path.dirname(db_filepath), exist_ok=True)
       cache_name = "sound_data"
-      db_filename = "google_speech-cache.sqlite"
-      __class__.cache = web_cache.ThreadedWebCache(cache_name,
-                                                   db_filename=db_filename,
+      __class__.cache = web_cache.ThreadedWebCache(db_filepath,
+                                                   cache_name,
                                                    expiration=60 * 60 * 24 * 365,  # 1 year
                                                    caching_strategy=web_cache.CachingStrategy.LRU)
-      logging.getLogger().debug("Total size of file '%s': %s" % (db_filename,
+      logging.getLogger().debug("Total size of file '%s': %s" % (db_filepath,
                                                                  __class__.cache.getDatabaseFileSize()))
       purged_count = __class__.cache.purge()
       logging.getLogger().debug("%u obsolete entries have been removed from cache '%s'" % (purged_count, cache_name))
