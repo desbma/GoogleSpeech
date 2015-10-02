@@ -22,7 +22,7 @@ Google Speech is a simple multiplatform command line tool to read text using Goo
 
 ## Installation
 
-**Google Speech needs Python >= 3.3.**
+**Google Speech needs [Python](https://www.python.org/downloads/) >= 3.3.**
 
 ### From PyPI (with PIP)
 
