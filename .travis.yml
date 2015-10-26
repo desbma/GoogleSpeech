@@ -9,7 +9,7 @@ before_install:
 install:
   - "pip install -r requirements.txt"
   - "pip install coveralls"
-  - "sudo apt-get -yV install sox libsox-fmt-mp3"
+  - "sudo apt-get -V install sox libsox-fmt-mp3"
 script:
   - "export AUDIODEV=null"  # see https://github.com/travis-ci/travis-ci/issues/1754
   - "coverage run --source=google_speech setup.py test"
@@ -18,7 +18,7 @@ after_success:
 before_deploy:
   - "sudo add-apt-repository -y ppa:marutter/c2d4u"  # to get newer pandoc
   - "sudo apt-get -q update"
-  - "sudo apt-get -yV install pandoc"
+  - "sudo apt-get -V install pandoc"
   - "pip install pypandoc"
 deploy:
   provider: pypi
