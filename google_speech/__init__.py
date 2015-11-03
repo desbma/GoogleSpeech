@@ -11,6 +11,7 @@ import collections
 import itertools
 import logging
 import os
+import random
 import re
 import subprocess
 import string
@@ -218,7 +219,14 @@ class SpeechSegment:
       params["total"] = str(self.segment_count)
     params["textlen"] = str(len(self.text))
     params["tl"] = self.lang
-    params["q"] = self.text.lower()
+    # we need to generate 2 integers but not truly random because they would make the URL unique
+    # and prevent future cache hits
+    gen = random.Random()
+    lower_text = self.text.lower()
+    gen.seed(lower_text.encode() + self.lang.encode(),
+             version=2)
+    params["tk"] = "|".join(str(gen.randint(1, 500000)) for _ in range(2))
+    params["q"] = lower_text
     return "%s?%s" % (__class__.BASE_URL, urllib.parse.urlencode(params))
 
   def download(self, url):
