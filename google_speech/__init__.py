@@ -67,11 +67,11 @@ class Speech:
     if self.text == "-":
       if sys.stdin.isatty():
         logging.getLogger().error("Stdin is not a pipe")
-        raise StopIteration()
+        return
       while True:
         new_line = sys.stdin.readline()
         if not new_line:
-          raise StopIteration()
+          return
         segments = __class__.splitText(new_line)
         for segment_num, segment in enumerate(segments):
           yield SpeechSegment(segment, self.lang, segment_num, len(segments))
