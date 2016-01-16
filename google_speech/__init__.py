@@ -172,29 +172,31 @@ class SpeechSegment:
 
   def isInCache(self):
     """ Return True if audio data for this segment is present in cache, False otherwise. """
-    url = self.buildUrl()
+    url = self.buildUrl(cache_friendly=True)
     return url in __class__.cache
 
   def preLoad(self):
     """ Store audio data in cache for fast playback. """
     logging.getLogger().debug("Preloading segment '%s'" % (self))
-    url = self.buildUrl()
-    audio_data = self.download(url)
+    real_url = self.buildUrl()
+    cache_url = self.buildUrl(cache_friendly=True)
+    audio_data = self.download(real_url)
     assert(audio_data)
-    __class__.cache[url] = audio_data
+    __class__.cache[cache_url] = audio_data
 
   def play(self, sox_effects):
     """ Play the segment. """
     with self.preload_mutex:
-      url = self.buildUrl()
-      if url in __class__.cache:
-        logging.getLogger().debug("Got data for URL '%s' from cache" % (url))
-        audio_data = __class__.cache[url]
+      cache_url = self.buildUrl(cache_friendly=True)
+      if cache_url in __class__.cache:
+        logging.getLogger().debug("Got data for URL '%s' from cache" % (cache_url))
+        audio_data = __class__.cache[cache_url]
         assert(audio_data)
       else:
-        audio_data = self.download(url)
+        real_url = self.buildUrl()
+        audio_data = self.download(real_url)
         assert(audio_data)
-        __class__.cache[url] = audio_data
+        __class__.cache[cache_url] = audio_data
     logging.getLogger().info("Playing speech segment (%s): '%s'" % (self.lang, self))
     #cmd = ["play", "-q", "-t", "mp3", "-", "trim", "0.25", "-0.1"]
     cmd = ["play", "-q", "-t", "mp3", "-", "trim", "0.1", "reverse", "trim", "0.07", "reverse"]
@@ -209,8 +211,12 @@ class SpeechSegment:
       raise RuntimeError()
     logging.getLogger().debug("Done playing")
 
-  def buildUrl(self):
-    """ Construct the URL to get the sound from Goggle API. """
+  def buildUrl(self, cache_friendly=False):
+    """
+    Construct the URL to get the sound from Goggle API.
+
+    If cache_friendly is True, remove token from URL to use as a cache key.
+    """
     hasher = gToken()
     params = collections.OrderedDict()
     params["client"] = "t"
@@ -221,7 +227,8 @@ class SpeechSegment:
     params["textlen"] = str(len(self.text))
     params["tl"] = self.lang
     lower_text = self.text.lower()
-    params["tk"] = hasher.calculate_token(lower_text)
+    if not cache_friendly:
+      params["tk"] = hasher.calculate_token(lower_text)
     params["q"] = lower_text
     return "%s?%s" % (__class__.BASE_URL, urllib.parse.urlencode(params))
 
