@@ -33,6 +33,8 @@ SUPPORTED_LANGUAGES = ("af", "ar", "az", "be", "bg", "bn", "ca", "cs", "cy", "da
                        "sl", "sq", "sr", "sv", "sw", "ta", "te", "th", "tl", "tr", "uk", "ur", "vi", "yi", "zh-CN",
                        "zh-TW")
 
+PRELOADER_THREAD_COUNT = 1
+
 
 class PreloaderThread(threading.Thread):
 
@@ -122,9 +124,8 @@ class Speech:
     """ Play a speech. """
     if self.text != "-":
       segments = list(self)
-      # start preloader threads
-      # 2 threads are enough and avoid hammering the api server
-      preloader_threads = [PreloaderThread(name="PreloaderThread-%u" % (i)) for i in range(2)]
+      # start preloader thread(s)
+      preloader_threads = [PreloaderThread(name="PreloaderThread-%u" % (i)) for i in range(PRELOADER_THREAD_COUNT)]
       for preloader_thread in preloader_threads:
         preloader_thread.segments = segments
         preloader_thread.start()
