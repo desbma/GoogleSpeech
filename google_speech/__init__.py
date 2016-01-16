@@ -43,9 +43,11 @@ class PreloaderThread(threading.Thread):
       for segment in self.segments:
         acquired = segment.preload_mutex.acquire(blocking=False)
         if acquired:
-          if not segment.isInCache():
-            segment.preLoad()
-          segment.preload_mutex.release()
+          try:
+            if not segment.isInCache():
+              segment.preLoad()
+          finally:
+            segment.preload_mutex.release()
     except Exception as e:
       logging.getLogger().error("%s: %s" % (e.__class__.__qualname__, e))
 
