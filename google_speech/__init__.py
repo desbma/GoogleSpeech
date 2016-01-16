@@ -24,6 +24,7 @@ import requests
 
 from google_speech import bin_dep
 from google_speech import colored_logging
+from google_speech.token import gToken
 from google_speech import web_cache
 
 
@@ -211,6 +212,7 @@ class SpeechSegment:
 
   def buildUrl(self):
     """ Construct the URL to get the sound from Goggle API. """
+    hasher = gToken()
     params = collections.OrderedDict()
     params["client"] = "t"
     params["ie"] = "UTF-8"
@@ -225,7 +227,7 @@ class SpeechSegment:
     lower_text = self.text.lower()
     gen.seed(lower_text.encode() + self.lang.encode(),
              version=2)
-    params["tk"] = "|".join(str(gen.randint(1, 500000)) for _ in range(2))
+    params["tk"] = hasher.calculate_token(lower_text)
     params["q"] = lower_text
     return "%s?%s" % (__class__.BASE_URL, urllib.parse.urlencode(params))
 
