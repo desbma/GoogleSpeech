@@ -19,11 +19,11 @@ import threading
 import urllib.parse
 
 import appdirs
+from gtts_token.gtts_token import Token as gToken
 import requests
 
 from google_speech import bin_dep
 from google_speech import colored_logging
-from google_speech.token import gToken
 from google_speech import web_cache
 
 
