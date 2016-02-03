@@ -302,7 +302,7 @@ def cl_main():
 
 
 # check deps
-bin_dep.check_bin_dependency(("play",))
+bin_dep.check_bin_dependency(("sox",))
 
 
 if __name__ == "__main__":
