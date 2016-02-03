@@ -204,8 +204,10 @@ class SpeechSegment:
         assert(audio_data)
         __class__.cache[cache_url] = audio_data
     logging.getLogger().info("Playing speech segment (%s): '%s'" % (self.lang, self))
-    #cmd = ["play", "-q", "-t", "mp3", "-", "trim", "0.25", "-0.1"]
-    cmd = ["play", "-q", "-t", "mp3", "-", "trim", "0.1", "reverse", "trim", "0.07", "reverse"]
+    cmd = ["sox", "-q", "-t", "mp3", "-"]
+    if sys.platform.startswith("win32"):
+      cmd.extend(("-t", "waveaudio"))
+    cmd.extend(("-d", "trim", "0.1", "reverse", "trim", "0.07", "reverse"))  # "trim", "0.25", "-0.1"
     if sox_effects is not None:
       cmd.extend(sox_effects)
     logging.getLogger().debug("Start player process")
