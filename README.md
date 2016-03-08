@@ -30,7 +30,7 @@ Google Speech requires [Python](https://www.python.org/downloads/) >= 3.3.
 2. Install Google Speech: `pip3 install google_speech`
 3. Install [SoX](http://sox.sourceforge.net/), with MP3 support.
 On Ubuntu and other Debian derivatives: `sudo apt-get install sox libsox-fmt-mp3`.
-Windows users can [download binaries on the SoX website](http://sourceforge.net/projects/sox/files/sox/), once installed you also need to add sox `play` executable directory to your PATH.
+Windows users can [download binaries on the SoX website](http://sourceforge.net/projects/sox/files/sox/), once installed you also need to copy [libmad DLL](http://ossbuild.googlecode.com/svn/trunk/Shared/Build/Windows/Win32/bin/libmad-0.dll) in the directory where you have installed SoX, and to add this directory to your PATH environment variable.
 
 ### From source
 
@@ -39,7 +39,7 @@ Windows users can [download binaries on the SoX website](http://sourceforge.net/
 3. Install Google Speech: `python3 setup.py install`
 4. Install [SoX](http://sox.sourceforge.net/), with MP3 support.
 On Ubuntu and other Debian derivatives: `sudo apt-get install sox libsox-fmt-mp3`.
-Windows users can [download binaries on the SoX website](http://sourceforge.net/projects/sox/files/sox/), once installed you also need to add sox `play` executable directory to your PATH.
+Windows users can [download binaries on the SoX website](http://sourceforge.net/projects/sox/files/sox/), once installed you also need to copy [libmad DLL](http://ossbuild.googlecode.com/svn/trunk/Shared/Build/Windows/Win32/bin/libmad-0.dll) in the directory where you have installed SoX, and to add this directory to your PATH environment variable.
 
 
 ## Command line usage
@@ -74,5 +74,3 @@ On Unix systems, with Bash and pipes, you can be creative:
 ## License
 
 [GPLv3](https://www.gnu.org/licenses/gpl-3.0-standalone.html)
-
-Contains some code from [gTTS](https://github.com/pndurette/gTTS) ([MIT](https://raw.githubusercontent.com/pndurette/gTTS/master/LICENSE) license).

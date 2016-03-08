@@ -2,7 +2,7 @@
 
 """ Read a text using Google Translate TTS API. """
 
-__version__ = "1.0.13"
+__version__ = "1.0.14"
 __author__ = "desbma"
 __license__ = "GPLv3"
 
@@ -19,11 +19,11 @@ import threading
 import urllib.parse
 
 import appdirs
+from gtts_token.gtts_token import Token as gToken
 import requests
 
 from google_speech import bin_dep
 from google_speech import colored_logging
-from google_speech.token import gToken
 from google_speech import web_cache
 
 
@@ -204,8 +204,10 @@ class SpeechSegment:
         assert(audio_data)
         __class__.cache[cache_url] = audio_data
     logging.getLogger().info("Playing speech segment (%s): '%s'" % (self.lang, self))
-    #cmd = ["play", "-q", "-t", "mp3", "-", "trim", "0.25", "-0.1"]
-    cmd = ["play", "-q", "-t", "mp3", "-", "trim", "0.1", "reverse", "trim", "0.07", "reverse"]
+    cmd = ["sox", "-q", "-t", "mp3", "-"]
+    if sys.platform.startswith("win32"):
+      cmd.extend(("-t", "waveaudio"))
+    cmd.extend(("-d", "trim", "0.1", "reverse", "trim", "0.07", "reverse"))  # "trim", "0.25", "-0.1"
     if sox_effects is not None:
       cmd.extend(sox_effects)
     logging.getLogger().debug("Start player process")
@@ -300,7 +302,7 @@ def cl_main():
 
 
 # check deps
-bin_dep.check_bin_dependency(("play",))
+bin_dep.check_bin_dependency(("sox",))
 
 
 if __name__ == "__main__":
