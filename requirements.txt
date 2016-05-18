@@ -1,3 +1,2 @@
 appdirs>=1.4.0
-gTTS-token>=1.0.0
 requests>=2.6.0

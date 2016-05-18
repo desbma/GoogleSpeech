@@ -19,7 +19,6 @@ import threading
 import urllib.parse
 
 import appdirs
-from gtts_token.gtts_token import Token as gToken
 import requests
 
 from google_speech import bin_dep
@@ -225,9 +224,8 @@ class SpeechSegment:
 
     If cache_friendly is True, remove token from URL to use as a cache key.
     """
-    hasher = gToken()
     params = collections.OrderedDict()
-    params["client"] = "t"
+    params["client"] = "tw-ob"
     params["ie"] = "UTF-8"
     params["idx"] = str(self.segment_num)
     if self.segment_count is not None:
@@ -235,8 +233,6 @@ class SpeechSegment:
     params["textlen"] = str(len(self.text))
     params["tl"] = self.lang
     lower_text = self.text.lower()
-    if not cache_friendly:
-      params["tk"] = hasher.calculate_token(lower_text)
     params["q"] = lower_text
     return "%s?%s" % (__class__.BASE_URL, urllib.parse.urlencode(params))
 
