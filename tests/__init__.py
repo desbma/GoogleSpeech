@@ -8,7 +8,6 @@ import tempfile
 import unittest
 
 import google_speech
-from . import web_cache_test
 
 
 google_speech.web_cache.DISABLE_PERSISTENT_CACHING = True
