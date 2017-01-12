@@ -53,6 +53,7 @@ setup(name="google_speech",
                    "Programming Language :: Python :: 3.3",
                    "Programming Language :: Python :: 3.4",
                    "Programming Language :: Python :: 3.5",
+                   "Programming Language :: Python :: 3.6",
                    "Topic :: Multimedia :: Sound/Audio :: Sound Synthesis",
                    "Topic :: Multimedia :: Sound/Audio :: Speech",
                    "Topic :: Utilities"])
