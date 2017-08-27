@@ -73,4 +73,4 @@ On Unix systems, with Bash and pipes, you can be creative:
 
 ## License
 
-[GPLv3](https://www.gnu.org/licenses/gpl-3.0-standalone.html)
+[LGPLv2](https://www.gnu.org/licenses/old-licenses/lgpl-2.1-standalone.html)
