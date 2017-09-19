@@ -4,7 +4,7 @@
 
 __version__ = "1.0.16"
 __author__ = "desbma"
-__license__ = "GPLv3"
+__license__ = "LGPLv2"
 
 import argparse
 import collections

@@ -5,7 +5,7 @@ Google Speech
 [![Tests status](https://img.shields.io/travis/desbma/GoogleSpeech/master.svg?label=tests&style=flat)](https://travis-ci.org/desbma/GoogleSpeech)
 [![Coverage](https://img.shields.io/coveralls/desbma/GoogleSpeech/master.svg?style=flat)](https://coveralls.io/github/desbma/GoogleSpeech?branch=master)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/google_speech.svg?style=flat)](https://pypi.python.org/pypi/google_speech/)
-[![License](https://img.shields.io/github/license/desbma/GoogleSpeech.svg?style=flat)](https://pypi.python.org/pypi/google_speech/)
+[![License](https://img.shields.io/github/license/desbma/GoogleSpeech.svg?style=flat)](https://github.com/desbma/GoogleSpeech/blob/master/LICENSE)
 
 Google Speech is a simple multiplatform command line tool to read text using Google Translate TTS (Text To Speech) API.
 
