@@ -70,6 +70,21 @@ On Unix systems, with Bash and pipes, you can be creative:
 
     `curl -s http://api.icndb.com/jokes/random/ | python3 -c 'import html.parser, json, sys; print(html.parser.HTMLParser().unescape(json.load(sys.stdin)["value"]["joke"]))' | google_speech -`
 
+## Python usage
+```
+from google_speech import Speech
+
+text = "Text to speak"
+lang = 'en'
+# see here: http://sox.sourceforge.net/Main/HomePage
+sox_effects = ('speed', '1')
+
+Speech(text, lang).play(sox_effects)
+```
+Or you can inline it
+```
+Speech("text", 'en').play(('speed', '1'))
+```
 
 ## License
 
