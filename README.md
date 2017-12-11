@@ -71,6 +71,26 @@ On Unix systems, with Bash and pipes, you can be creative:
     `curl -s http://api.icndb.com/jokes/random/ | python3 -c 'import html.parser, json, sys; print(html.parser.HTMLParser().unescape(json.load(sys.stdin)["value"]["joke"]))' | google_speech -`
 
 
+## Python usage
+
+You can use `google_speech` from any Python script or module.
+
+Sample code:
+```
+from google_speech import Speech
+
+# say "Hello World"
+text = "Hello World"
+lang = "en"
+speech = Speech(text, lang)
+speech.play()
+
+# you can also apply audio effects (using SoX)
+# see http://sox.sourceforge.net/sox.html#EFFECTS for full effect documentation
+sox_effects = ("speed", "1.5")
+speech.play(sox_effects)
+```
+
 ## License
 
 [LGPLv2](https://www.gnu.org/licenses/old-licenses/lgpl-2.1-standalone.html)

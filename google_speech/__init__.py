@@ -119,7 +119,7 @@ class Speech:
     return __class__.CLEAN_MULTIPLE_SPACES_REGEX.sub(" ",
                                                      dirty_string.replace("\n", " ").replace("\t", " ").strip())
 
-  def play(self, sox_effects):
+  def play(self, sox_effects=()):
     """ Play a speech. """
     if self.text != "-":
       segments = list(self)
@@ -189,7 +189,7 @@ class SpeechSegment:
     assert(audio_data)
     __class__.cache[cache_url] = audio_data
 
-  def play(self, sox_effects):
+  def play(self, sox_effects=()):
     """ Play the segment. """
     with self.preload_mutex:
       cache_url = self.buildUrl(cache_friendly=True)
@@ -207,8 +207,7 @@ class SpeechSegment:
     if sys.platform.startswith("win32"):
       cmd.extend(("-t", "waveaudio"))
     cmd.extend(("-d", "trim", "0.1", "reverse", "trim", "0.07", "reverse"))  # "trim", "0.25", "-0.1"
-    if sox_effects is not None:
-      cmd.extend(sox_effects)
+    cmd.extend(sox_effects)
     logging.getLogger().debug("Start player process")
     p = subprocess.Popen(cmd,
                          stdin=subprocess.PIPE,
@@ -246,11 +245,6 @@ class SpeechSegment:
     return response.content
 
 
-def main(text, lang, sox_effects):
-  # play
-  Speech(text, lang).play(sox_effects)
-
-
 def cl_main():
   # parse args
   arg_parser = argparse.ArgumentParser(description="Google Speech v%s.%s" % (__version__, __doc__),
@@ -265,7 +259,7 @@ def cl_main():
                           help="Language")
   arg_parser.add_argument("-e",
                           "--sox-effects",
-                          default=None,
+                          default=(),
                           nargs="+",
                           dest="sox_effects",
                           help="SoX effect command to pass to SoX's play")
@@ -293,8 +287,8 @@ def cl_main():
   logging_handler.setFormatter(logging_formatter)
   logging.getLogger().addHandler(logging_handler)
 
-  # main
-  main(args.speech, args.lang, args.sox_effects)
+  # do the job
+  Speech(args.speech, args.lang).play(args.sox_effects)
 
 
 # check deps
