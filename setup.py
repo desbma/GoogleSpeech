@@ -22,12 +22,8 @@ try:
 except ImportError:
   requirements.append("enum34")
 
-try:
-  import pypandoc
-  readme = pypandoc.convert("README.md", "rst")
-except ImportError:
-  with open("README.md", "rt") as f:
-    readme = f.read()
+with open("README.md", "rt") as f:
+  readme = f.read()
 
 setup(name="google_speech",
       version=version,
@@ -38,6 +34,7 @@ setup(name="google_speech",
       install_requires=requirements,
       description="Read text using Google Translate TTS API",
       long_description=readme,
+      long_description_content_type="text/markdown",
       url="https://github.com/desbma/GoogleSpeech",
       download_url="https://github.com/desbma/GoogleSpeech/archive/%s.tar.gz" % (version),
       keywords=["speech", "audio", "synthesis", "voice", "google", "tts"],
