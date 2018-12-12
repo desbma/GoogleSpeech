@@ -119,8 +119,10 @@ class Speech:
     return __class__.CLEAN_MULTIPLE_SPACES_REGEX.sub(" ",
                                                      dirty_string.replace("\n", " ").replace("\t", " ").strip())
 
-  def play(self, sox_effects=()):
-    """ Play a speech. """
+  def __buildSegments__(self):
+    """ Builds the segments """
+
+    preloader_threads = []
     if self.text != "-":
       segments = list(self)
       # start preloader thread(s)
@@ -130,6 +132,12 @@ class Speech:
         preloader_thread.start()
     else:
       segments = iter(self)
+    return (segments,preloader_threads)
+
+  def play(self, sox_effects=()):
+    """ Play a speech. """
+    
+    segments,preloader_threads = self.__buildSegments__()
 
     # play segments
     for segment in segments:
@@ -139,6 +147,18 @@ class Speech:
       # destroy preloader threads
       for preloader_thread in preloader_threads:
         preloader_thread.join()
+
+  def save(self,path):
+    """ Saves to an MP3 file """
+
+    segments,preloader_threads = self.__buildSegments__()
+    bytes = b''.join([segment.getAudioData() for segment in segments])
+    
+    try:
+      with open(path,'wb') as f:
+        f.write(bytes)
+    except:
+      raise
 
 
 class SpeechSegment:
@@ -189,8 +209,8 @@ class SpeechSegment:
     assert(audio_data)
     __class__.cache[cache_url] = audio_data
 
-  def play(self, sox_effects=()):
-    """ Play the segment. """
+  def getAudioData(self):
+    """ Fetches the audio data """
     with self.preload_mutex:
       cache_url = self.buildUrl(cache_friendly=True)
       if cache_url in __class__.cache:
@@ -202,6 +222,12 @@ class SpeechSegment:
         audio_data = self.download(real_url)
         assert(audio_data)
         __class__.cache[cache_url] = audio_data
+    return audio_data
+
+  def play(self, sox_effects=()):
+    """ Play the segment. """
+    
+    audio_data = self.getAudioData()
     logging.getLogger().info("Playing speech segment (%s): '%s'" % (self.lang, self))
     cmd = ["sox", "-q", "-t", "mp3", "-"]
     if sys.platform.startswith("win32"):
