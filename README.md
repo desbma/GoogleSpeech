@@ -56,6 +56,9 @@ Run `google_speech -h` to get full command line reference.
 
     `google_speech -l en "Hello, I am a stupid robot voice" -e speed 0.9 overdrive 10 echo 0.8 0.7 6 0.7 echo 0.8 0.7 10 0.7 echo 0.8 0.7 12 0.7 echo 0.8 0.88 12 0.7 echo 0.8 0.88 30 0.7 echo 0.6 0.6 60 0.7`
 
+* Save to MP3 file :
+	`google_speech -l en -o hello.mp3 "Hello Google, greetings from France !"`
+
 On Unix systems, with Bash and pipes, you can be creative:
 
 * Bash greetings:
@@ -84,6 +87,7 @@ text = "Hello World"
 lang = "en"
 speech = Speech(text, lang)
 speech.play()
+speech.save("output.mp3") # Saving the output to an MP3 file
 
 # you can also apply audio effects (using SoX)
 # see http://sox.sourceforge.net/sox.html#EFFECTS for full effect documentation

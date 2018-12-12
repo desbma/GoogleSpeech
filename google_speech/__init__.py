@@ -295,6 +295,11 @@ def cl_main():
                           default="normal",
                           dest="verbosity",
                           help="Level of logging output")
+  arg_parser.add_argument("-o",
+                          "--output",
+                          default=None,
+                          dest="output",
+                          help="Name of the output file")
   args = arg_parser.parse_args()
 
   # setup logger
@@ -314,7 +319,10 @@ def cl_main():
   logging.getLogger().addHandler(logging_handler)
 
   # do the job
-  Speech(args.speech, args.lang).play(args.sox_effects)
+  if args.output: # Save to file
+    Speech(args.speech, args.lang).save(args.output)
+  else: # Play audio
+    Speech(args.speech, args.lang).play(args.sox_effects)
 
 
 # check deps
