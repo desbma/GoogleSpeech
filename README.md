@@ -87,12 +87,16 @@ text = "Hello World"
 lang = "en"
 speech = Speech(text, lang)
 speech.play()
-speech.save("output.mp3") # Saving the output to an MP3 file
 
 # you can also apply audio effects (using SoX)
 # see http://sox.sourceforge.net/sox.html#EFFECTS for full effect documentation
 sox_effects = ("speed", "1.5")
 speech.play(sox_effects)
+
+# You can save the speech to an MP3 file
+# but the SOX effects won't be taken into account 
+speech.save("output.mp3")
+
 ```
 
 ## License

@@ -119,9 +119,10 @@ class Speech:
     return __class__.CLEAN_MULTIPLE_SPACES_REGEX.sub(" ",
                                                      dirty_string.replace("\n", " ").replace("\t", " ").strip())
 
-  def __buildSegments__(self):
-    """ Builds the segments """
+  def play(self, sox_effects=()):
+    """ Play a speech. """
 
+    # Build the segments
     preloader_threads = []
     if self.text != "-":
       segments = list(self)
@@ -132,12 +133,6 @@ class Speech:
         preloader_thread.start()
     else:
       segments = iter(self)
-    return (segments,preloader_threads)
-
-  def play(self, sox_effects=()):
-    """ Play a speech. """
-    
-    segments,preloader_threads = self.__buildSegments__()
 
     # play segments
     for segment in segments:
@@ -151,12 +146,14 @@ class Speech:
   def save(self,path):
     """ Saves to an MP3 file """
 
-    segments,preloader_threads = self.__buildSegments__()
-    bytes = b''.join([segment.getAudioData() for segment in segments])
-    
+    segments = list(self) if self.text != "-" else iter(self)
+    data = b''.join([segment.getAudioData() for segment in segments])
+
+    # In case we don't have permission to write to path
+    # or if disk is full , etc ...
     try:
       with open(path,'wb') as f:
-        f.write(bytes)
+        f.write(data)
     except:
       raise
 
@@ -226,7 +223,7 @@ class SpeechSegment:
 
   def play(self, sox_effects=()):
     """ Play the segment. """
-    
+
     audio_data = self.getAudioData()
     logging.getLogger().info("Playing speech segment (%s): '%s'" % (self.lang, self))
     cmd = ["sox", "-q", "-t", "mp3", "-"]
@@ -299,7 +296,7 @@ def cl_main():
                           "--output",
                           default=None,
                           dest="output",
-                          help="Name of the output file")
+                          help="Outputs audio data to this file instead of playing it")
   args = arg_parser.parse_args()
 
   # setup logger
@@ -318,10 +315,14 @@ def cl_main():
   logging_handler.setFormatter(logging_formatter)
   logging.getLogger().addHandler(logging_handler)
 
+  if (args.output is not None) and args.sox_effects:
+      logging.getLogger().debug("Effects are not supported when saving to a file")
+      exit(1)
+
   # do the job
-  if args.output: # Save to file
+  if args.output:
     Speech(args.speech, args.lang).save(args.output)
-  else: # Play audio
+  else:
     Speech(args.speech, args.lang).play(args.sox_effects)
 
 
