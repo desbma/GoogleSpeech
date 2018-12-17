@@ -121,6 +121,9 @@ class Speech:
 
   def play(self, sox_effects=()):
     """ Play a speech. """
+
+    # Build the segments
+    preloader_threads = []
     if self.text != "-":
       segments = list(self)
       # start preloader thread(s)
@@ -139,6 +142,20 @@ class Speech:
       # destroy preloader threads
       for preloader_thread in preloader_threads:
         preloader_thread.join()
+
+  def save(self,path):
+    """ Saves to an MP3 file """
+
+    segments = list(self) if self.text != "-" else iter(self)
+    data = b''.join([segment.getAudioData() for segment in segments])
+
+    # In case we don't have permission to write to path
+    # or if disk is full , etc ...
+    try:
+      with open(path,'wb') as f:
+        f.write(data)
+    except:
+      raise
 
 
 class SpeechSegment:
@@ -189,8 +206,8 @@ class SpeechSegment:
     assert(audio_data)
     __class__.cache[cache_url] = audio_data
 
-  def play(self, sox_effects=()):
-    """ Play the segment. """
+  def getAudioData(self):
+    """ Fetches the audio data """
     with self.preload_mutex:
       cache_url = self.buildUrl(cache_friendly=True)
       if cache_url in __class__.cache:
@@ -202,6 +219,12 @@ class SpeechSegment:
         audio_data = self.download(real_url)
         assert(audio_data)
         __class__.cache[cache_url] = audio_data
+    return audio_data
+
+  def play(self, sox_effects=()):
+    """ Play the segment. """
+
+    audio_data = self.getAudioData()
     logging.getLogger().info("Playing speech segment (%s): '%s'" % (self.lang, self))
     cmd = ["sox", "-q", "-t", "mp3", "-"]
     if sys.platform.startswith("win32"):
@@ -269,6 +292,11 @@ def cl_main():
                           default="normal",
                           dest="verbosity",
                           help="Level of logging output")
+  arg_parser.add_argument("-o",
+                          "--output",
+                          default=None,
+                          dest="output",
+                          help="Outputs audio data to this file instead of playing it")
   args = arg_parser.parse_args()
 
   # setup logger
@@ -287,8 +315,15 @@ def cl_main():
   logging_handler.setFormatter(logging_formatter)
   logging.getLogger().addHandler(logging_handler)
 
+  if (args.output is not None) and args.sox_effects:
+      logging.getLogger().debug("Effects are not supported when saving to a file")
+      exit(1)
+
   # do the job
-  Speech(args.speech, args.lang).play(args.sox_effects)
+  if args.output:
+    Speech(args.speech, args.lang).save(args.output)
+  else:
+    Speech(args.speech, args.lang).play(args.sox_effects)
 
 
 # check deps
