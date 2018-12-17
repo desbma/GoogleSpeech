@@ -143,19 +143,11 @@ class Speech:
       for preloader_thread in preloader_threads:
         preloader_thread.join()
 
-  def save(self,path):
-    """ Saves to an MP3 file """
-
-    segments = list(self) if self.text != "-" else iter(self)
-    data = b''.join([segment.getAudioData() for segment in segments])
-
-    # In case we don't have permission to write to path
-    # or if disk is full , etc ...
-    try:
-      with open(path,'wb') as f:
-        f.write(data)
-    except:
-      raise
+  def save(self, path):
+    """ Save audio data to an MP3 file. """
+    with open(path, "wb") as f:
+      for segment in self:
+        f.write(segment.getAudioData())
 
 
 class SpeechSegment:
@@ -207,7 +199,7 @@ class SpeechSegment:
     __class__.cache[cache_url] = audio_data
 
   def getAudioData(self):
-    """ Fetches the audio data """
+    """ Fetch the audio data. """
     with self.preload_mutex:
       cache_url = self.buildUrl(cache_friendly=True)
       if cache_url in __class__.cache:
@@ -223,7 +215,6 @@ class SpeechSegment:
 
   def play(self, sox_effects=()):
     """ Play the segment. """
-
     audio_data = self.getAudioData()
     logging.getLogger().info("Playing speech segment (%s): '%s'" % (self.lang, self))
     cmd = ["sox", "-q", "-t", "mp3", "-"]
@@ -320,10 +311,11 @@ def cl_main():
       exit(1)
 
   # do the job
+  speech = Speech(args.speech, args.lang)
   if args.output:
-    Speech(args.speech, args.lang).save(args.output)
+    speech.save(args.output)
   else:
-    Speech(args.speech, args.lang).play(args.sox_effects)
+    speech.play(args.sox_effects)
 
 
 # check deps
