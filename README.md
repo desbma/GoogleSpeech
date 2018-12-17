@@ -9,6 +9,8 @@ Google Speech
 
 Google Speech is a simple multiplatform command line tool to read text using Google Translate TTS (Text To Speech) API.
 
+See also [gTTS](https://github.com/pndurette/gTTS), for a similar but probably more advanced, and actively maintained projet.
+
 
 ## Features
 
@@ -88,13 +90,12 @@ lang = "en"
 speech = Speech(text, lang)
 speech.play()
 
-# you can also apply audio effects (using SoX)
+# you can also apply audio effects while playing (using SoX)
 # see http://sox.sourceforge.net/sox.html#EFFECTS for full effect documentation
 sox_effects = ("speed", "1.5")
 speech.play(sox_effects)
 
-# You can save the speech to an MP3 file
-# but the SOX effects won't be taken into account 
+# save the speech to an MP3 file (no effect is applied)
 speech.save("output.mp3")
 
 ```
