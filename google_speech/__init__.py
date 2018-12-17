@@ -26,11 +26,12 @@ from google_speech import bin_dep
 from google_speech import colored_logging
 
 
-SUPPORTED_LANGUAGES = ("af", "ar", "az", "be", "bg", "bn", "ca", "cs", "cy", "da", "de", "el", "en", "eo", "es", "et",
-                       "eu", "fa", "fi", "fr", "ga", "gl", "gu", "hi", "hr", "ht", "hu", "id", "is", "it", "iw", "ja",
-                       "ka", "kn", "ko", "la", "lt", "lv", "mk", "ms", "mt", "nl", "no", "pl", "pt", "ro", "ru", "sk",
-                       "sl", "sq", "sr", "sv", "sw", "ta", "te", "th", "tl", "tr", "uk", "ur", "vi", "yi", "zh-CN",
-                       "zh-TW")
+SUPPORTED_LANGUAGES = ("af", "ar", "bn", "bs", "ca", "cs", "cy", "da", "de", "el", "en", "en-au", "en-ca", "en-gb",
+                       "en-gh", "en-ie", "en-in", "en-ng", "en-nz", "en-ph", "en-tz", "en-uk", "en-us", "en-za", "eo",
+                       "es", "es-es", "es-us", "et", "fi", "fr", "fr-ca", "fr-fr", "hi", "hr", "hu", "hy", "id", "is",
+                       "it", "ja", "jw", "km", "ko", "la", "lv", "mk", "ml", "mr", "my", "ne", "nl", "no", "pl", "pt",
+                       "pt-br", "pt-pt", "ro", "ru", "si", "sk", "sq", "sr", "su", "sv", "sw", "ta", "te", "th", "tl",
+                       "tr", "uk", "vi", "zh-cn", "zh-tw")
 
 PRELOADER_THREAD_COUNT = 1
 
