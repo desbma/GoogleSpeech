@@ -147,8 +147,12 @@ class Speech:
   def save(self, path):
     """ Save audio data to an MP3 file. """
     with open(path, "wb") as f:
-      for segment in self:
-        f.write(segment.getAudioData())
+      self.savef(f)
+
+  def savef(self, file):
+    """ Write audio data into a file object. """
+    for segment in self:
+      file.write(segment.getAudioData())
 
 
 class SpeechSegment:
