@@ -8,12 +8,12 @@ __license__ = "LGPLv2"
 
 import argparse
 import collections
-import itertools
 import logging
 import os
+import unicodedata
 import re
-import subprocess
 import string
+import subprocess
 import sys
 import threading
 import urllib.parse
@@ -89,29 +89,42 @@ class Speech:
         yield SpeechSegment(segment, self.lang, segment_num, len(segments))
 
   @staticmethod
+  def findLastCharIndexMatching(text, func):
+    for i in range(len(text) - 1, -1, -1):
+      if func(text[i]):
+        return i
+
+  @staticmethod
   def splitText(text):
-    useless_chars = frozenset(string.punctuation + string.whitespace)
     segments = []
-    left = __class__.cleanSpaces(text)
-    previous_right = None
-    while True:
-      while len(left) > __class__.MAX_SEGMENT_SIZE:
-        lr = tuple(map(__class__.cleanSpaces, left.rsplit(" ", 1)))
-        if len(lr) == 2:
-          left, right = lr
-        else:
-          left = lr[0][:__class__.MAX_SEGMENT_SIZE]
-          right = lr[0][__class__.MAX_SEGMENT_SIZE:]
-        if previous_right is not None:
-          previous_right = "%s %s" % (right, previous_right)
-        else:
-          previous_right = right
-      if any(itertools.filterfalse(useless_chars.__contains__, left)):
-        segments.append(left)
-      if not previous_right:
-        break
-      left = previous_right
-      previous_right = None
+    remaining_text = __class__.cleanSpaces(text)
+
+    while len(remaining_text) > __class__.MAX_SEGMENT_SIZE:
+      cur_text = remaining_text[:__class__.MAX_SEGMENT_SIZE]
+
+      # try to split at punctuation
+      split_idx = __class__.findLastCharIndexMatching(cur_text,
+                                                      # https://en.wikipedia.org/wiki/Unicode_character_property#General_Category
+                                                      lambda x: unicodedata.category(x) in ("Ps", "Pe", "Pi", "Pf", "Po"))
+      if split_idx is None:
+        # try to split at whitespace
+        split_idx = __class__.findLastCharIndexMatching(cur_text,
+                                                        lambda x: unicodedata.category(x).startswith("Z"))
+      if split_idx is None:
+        # try to split at anything not a letter or number
+        split_idx = __class__.findLastCharIndexMatching(cur_text,
+                                                        lambda x: not (unicodedata.category(x)[0] in ("L", "N")))
+      if split_idx is None:
+        # split at the last char
+        split_idx = __class__.MAX_SEGMENT_SIZE - 1
+
+      new_segment = cur_text[:split_idx + 1].rstrip()
+      segments.append(new_segment)
+      remaining_text = remaining_text[split_idx + 1:].lstrip(string.whitespace + string.punctuation)
+
+    if remaining_text:
+      segments.append(remaining_text)
+
     return segments
 
   @staticmethod
@@ -123,7 +136,7 @@ class Speech:
   def play(self, sox_effects=()):
     """ Play a speech. """
 
-    # Build the segments
+    # build the segments
     preloader_threads = []
     if self.text != "-":
       segments = list(self)
