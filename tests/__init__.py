@@ -2,6 +2,7 @@
 
 import itertools
 import logging
+import os
 import socket
 import sys
 import tempfile
@@ -27,6 +28,16 @@ def is_internet_reachable():
 
 class TestGoogleSpeech(unittest.TestCase):
 
+  def setUp(self):
+    self.orig_audiodev = os.environ.get("AUDIODEV")
+    os.environ["AUDIODEV"] = "null"
+
+  def tearDOwn(self):
+    if self.orig_audiodev is not None:
+      os.environ["AUDIODEV"] = self.orig_audiodev
+    else:
+      del os.environ["AUDIODEV"]
+
   @unittest.skipUnless(is_internet_reachable(), "Need Internet access")
   def test_speechLoremIpsum(self):
     """ Play some reference speeches. """
@@ -38,14 +49,18 @@ class TestGoogleSpeech(unittest.TestCase):
 
   def test_splitTest(self):
     """ Split input text. """
-    text = "Aaaa, bbbb. Cccc, dddd. %s. %s, %s. %s? %s ! %s, %s %s." % ("e" * (google_speech.Speech.MAX_SEGMENT_SIZE + 10),
-                                                                        "f" * (google_speech.Speech.MAX_SEGMENT_SIZE - 1),
-                                                                        "g" * (google_speech.Speech.MAX_SEGMENT_SIZE),
-                                                                        "h" * (google_speech.Speech.MAX_SEGMENT_SIZE),
-                                                                        "i" * (google_speech.Speech.MAX_SEGMENT_SIZE),
-                                                                        "j" * (google_speech.Speech.MAX_SEGMENT_SIZE + 1),
-                                                                        "k" * google_speech.Speech.MAX_SEGMENT_SIZE,
-                                                                        "l" * 5)
+    text = ("Aaaa, bbbb. Cccc, dddd. "
+            "%s. %s, %s. %s? %s ! %s, %s %s. %s, %s %s" % ("e" * (google_speech.Speech.MAX_SEGMENT_SIZE + 10),
+                                                           "f" * (google_speech.Speech.MAX_SEGMENT_SIZE - 1),
+                                                           "g" * (google_speech.Speech.MAX_SEGMENT_SIZE),
+                                                           "h" * (google_speech.Speech.MAX_SEGMENT_SIZE),
+                                                           "i" * (google_speech.Speech.MAX_SEGMENT_SIZE),
+                                                           "j" * (google_speech.Speech.MAX_SEGMENT_SIZE + 1),
+                                                           "k" * google_speech.Speech.MAX_SEGMENT_SIZE,
+                                                           "l" * 5,
+                                                           "m" * (google_speech.Speech.MAX_SEGMENT_SIZE - 20),
+                                                           "n" * 10,
+                                                           "o" * 15))
     split_text = ("Aaaa, bbbb. Cccc, dddd.",
                   "%s" % ("e" * google_speech.Speech.MAX_SEGMENT_SIZE),
                   "%s." % ("e" * 10),
@@ -56,7 +71,8 @@ class TestGoogleSpeech(unittest.TestCase):
                   "j" * google_speech.Speech.MAX_SEGMENT_SIZE,
                   "j,",
                   "k" * google_speech.Speech.MAX_SEGMENT_SIZE,
-                  "lllll.")
+                  "lllll. %s," % ("m" * (google_speech.Speech.MAX_SEGMENT_SIZE - 20)),
+                  "%s %s" % ("n" * 10, "o" * 15))
 
     # input is text string
     speech = google_speech.Speech(text, "en")
