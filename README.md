@@ -9,8 +9,6 @@ Google Speech
 
 Google Speech is a simple multiplatform command line tool to read text using Google Translate TTS (Text To Speech) API.
 
-See also [gTTS](https://github.com/pndurette/gTTS), for a similar but probably more advanced, and actively maintained projet.
-
 
 ## Features
 
