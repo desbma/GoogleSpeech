@@ -90,12 +90,14 @@ class Speech:
 
   @staticmethod
   def findLastCharIndexMatching(text, func):
+    """ Return index of last character in string for which func(char) evaluates to True. """
     for i in range(len(text) - 1, -1, -1):
       if func(text[i]):
         return i
 
   @staticmethod
   def splitText(text):
+    """ Split text into sub segments of size not bigger than MAX_SEGMENT_SIZE. """
     segments = []
     remaining_text = __class__.cleanSpaces(text)
 
@@ -325,8 +327,8 @@ def cl_main():
   logging.getLogger().addHandler(logging_handler)
 
   if (args.output is not None) and args.sox_effects:
-      logging.getLogger().debug("Effects are not supported when saving to a file")
-      exit(1)
+    logging.getLogger().debug("Effects are not supported when saving to a file")
+    exit(1)
 
   # do the job
   speech = Speech(args.speech, args.lang)
