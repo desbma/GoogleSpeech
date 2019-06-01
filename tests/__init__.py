@@ -32,7 +32,7 @@ class TestGoogleSpeech(unittest.TestCase):
     self.orig_audiodev = os.environ.get("AUDIODEV")
     os.environ["AUDIODEV"] = "null"
 
-  def tearDOwn(self):
+  def tearDown(self):
     if self.orig_audiodev is not None:
       os.environ["AUDIODEV"] = self.orig_audiodev
     else:
