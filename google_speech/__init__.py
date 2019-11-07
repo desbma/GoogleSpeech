@@ -137,6 +137,8 @@ class Speech:
 
   def play(self, sox_effects=()):
     """ Play a speech. """
+    # check deps
+    bin_dep.check_bin_dependency(("sox",))
 
     # build the segments
     preloader_threads = []
@@ -337,9 +339,6 @@ def cl_main():
   else:
     speech.play(args.sox_effects)
 
-
-# check deps
-bin_dep.check_bin_dependency(("sox",))
 
 
 if __name__ == "__main__":
