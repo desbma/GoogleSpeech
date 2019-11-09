@@ -22,7 +22,6 @@ import appdirs
 import requests
 import web_cache
 
-from google_speech import bin_dep
 from google_speech import colored_logging
 
 
@@ -336,10 +335,6 @@ def cl_main():
     speech.save(args.output)
   else:
     speech.play(args.sox_effects)
-
-
-# check deps
-bin_dep.check_bin_dependency(("sox",))
 
 
 if __name__ == "__main__":
