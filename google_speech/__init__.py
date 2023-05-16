@@ -59,7 +59,7 @@ class Speech:
 
   CLEAN_MULTIPLE_SPACES_REGEX = re.compile("\s{2,}")
 
-  def __init__(self, text, lang, max_segment_size):
+  def __init__(self, text, lang, max_segment_size = 100):
     self.text = self.cleanSpaces(text)
     self.lang = lang
     self.max_segment_size = max_segment_size
