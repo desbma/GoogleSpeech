@@ -45,37 +45,40 @@ class TestGoogleSpeech(unittest.TestCase):
                 "Le Lorem Ipsum est simplement du faux texte employé dans la composition et la mise en page avant impression. Le Lorem Ipsum est le faux texte standard de l'imprimerie depuis les années 1500, quand un peintre anonyme assembla ensemble des morceaux de texte pour réaliser un livre spécimen de polices de texte.")
     for lang, speech in zip(("en", "fr"), speeches):
       for effect in ((), ("speed", "10")):
-        google_speech.Speech(speech, lang).play(effect)
+        max_segment_size: int = 100
+        google_speech.Speech(speech, lang, max_segment_size).play(effect)
 
   def test_splitTest(self):
+    max_segment_size: int = 100
+
     """ Split input text. """
     text = ("Aaaa, bbbb. Cccc, dddd. "
-            "%s. %s, %s. %s? %s ! %s, %s %s. %s, %s %s" % ("e" * (google_speech.Speech.MAX_SEGMENT_SIZE + 10),
-                                                           "f" * (google_speech.Speech.MAX_SEGMENT_SIZE - 1),
-                                                           "g" * (google_speech.Speech.MAX_SEGMENT_SIZE),
-                                                           "h" * (google_speech.Speech.MAX_SEGMENT_SIZE),
-                                                           "i" * (google_speech.Speech.MAX_SEGMENT_SIZE),
-                                                           "j" * (google_speech.Speech.MAX_SEGMENT_SIZE + 1),
-                                                           "k" * google_speech.Speech.MAX_SEGMENT_SIZE,
+            "%s. %s, %s. %s? %s ! %s, %s %s. %s, %s %s" % ("e" * (max_segment_size + 10),
+                                                           "f" * (max_segment_size - 1),
+                                                           "g" * (max_segment_size),
+                                                           "h" * (max_segment_size),
+                                                           "i" * (max_segment_size),
+                                                           "j" * (max_segment_size + 1),
+                                                           "k" * max_segment_size,
                                                            "l" * 5,
-                                                           "m" * (google_speech.Speech.MAX_SEGMENT_SIZE - 20),
+                                                           "m" * (max_segment_size - 20),
                                                            "n" * 10,
                                                            "o" * 15))
     split_text = ("Aaaa, bbbb. Cccc, dddd.",
-                  "%s" % ("e" * google_speech.Speech.MAX_SEGMENT_SIZE),
+                  "%s" % ("e" * max_segment_size),
                   "%s." % ("e" * 10),
-                  "%s," % ("f" * (google_speech.Speech.MAX_SEGMENT_SIZE - 1)),
-                  "%s" % ("g" * google_speech.Speech.MAX_SEGMENT_SIZE),
-                  "h" * google_speech.Speech.MAX_SEGMENT_SIZE,
-                  "i" * google_speech.Speech.MAX_SEGMENT_SIZE,
-                  "j" * google_speech.Speech.MAX_SEGMENT_SIZE,
+                  "%s," % ("f" * (max_segment_size - 1)),
+                  "%s" % ("g" * max_segment_size),
+                  "h" * max_segment_size,
+                  "i" * max_segment_size,
+                  "j" * max_segment_size,
                   "j,",
-                  "k" * google_speech.Speech.MAX_SEGMENT_SIZE,
-                  "lllll. %s," % ("m" * (google_speech.Speech.MAX_SEGMENT_SIZE - 20)),
+                  "k" * max_segment_size,
+                  "lllll. %s," % ("m" * (max_segment_size - 20)),
                   "%s %s" % ("n" * 10, "o" * 15))
 
     # input is text string
-    speech = google_speech.Speech(text, "en")
+    speech = google_speech.Speech(text, "en", max_segment_size)
     for segment, ref_text in itertools.zip_longest(speech, split_text):
       self.assertEqual(segment.text, ref_text)
 
@@ -86,11 +89,23 @@ class TestGoogleSpeech(unittest.TestCase):
         text_file.write("\n")
       text_file.seek(0)
       original_stdin, sys.stdin = sys.stdin, text_file
-      speech = google_speech.Speech("-", "fr")
+      speech = google_speech.Speech("-", "fr", max_segment_size)
       for i, (segment, ref_text) in enumerate(zip(speech, itertools.cycle(split_text)), 1):
         self.assertEqual(segment.text, ref_text)
       self.assertEqual(i, len(split_text * 3))
       sys.stdin = original_stdin
+
+
+class TestValidaters(unittest.TestCase):
+    def test_check_positive(self):
+        import argparse
+        for s in ["-1", "0", "1.0", "-1.0", ".0", "1.", "hello"]:
+            self.assertRaisesRegex(argparse.ArgumentTypeError, f'^{s} is an invalid positive int value$', google_speech.check_positive, s)
+        for s in ["1", "2"]:
+            try:
+                google_speech.check_positive(s)
+            except:
+                self.fail("`check_positive() raised an exception unexpectedly")
 
 
 if __name__ == "__main__":

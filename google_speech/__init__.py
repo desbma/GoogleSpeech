@@ -58,11 +58,11 @@ class Speech:
   """ Text to be read. """
 
   CLEAN_MULTIPLE_SPACES_REGEX = re.compile("\s{2,}")
-  MAX_SEGMENT_SIZE = 100
 
-  def __init__(self, text, lang):
+  def __init__(self, text, lang, max_segment_size):
     self.text = self.cleanSpaces(text)
     self.lang = lang
+    self.max_segment_size = max_segment_size
 
   def __iter__(self):
     """ Get an iterator over speech segments. """
@@ -78,12 +78,12 @@ class Speech:
         new_line = sys.stdin.readline()
         if not new_line:
           return
-        segments = __class__.splitText(new_line)
+        segments = __class__.splitText(new_line, self.max_segment_size)
         for segment_num, segment in enumerate(segments):
           yield SpeechSegment(segment, self.lang, segment_num, len(segments))
 
     else:
-      segments = __class__.splitText(self.text)
+      segments = __class__.splitText(self.text, self.max_segment_size)
       for segment_num, segment in enumerate(segments):
         yield SpeechSegment(segment, self.lang, segment_num, len(segments))
 
@@ -95,13 +95,13 @@ class Speech:
         return i
 
   @staticmethod
-  def splitText(text):
-    """ Split text into sub segments of size not bigger than MAX_SEGMENT_SIZE. """
+  def splitText(text, max_segment_size):
+    """ Split text into sub segments of size not bigger than `self.max_segment_size`. """
     segments = []
     remaining_text = __class__.cleanSpaces(text)
 
-    while len(remaining_text) > __class__.MAX_SEGMENT_SIZE:
-      cur_text = remaining_text[:__class__.MAX_SEGMENT_SIZE]
+    while len(remaining_text) > max_segment_size:
+      cur_text = remaining_text[:max_segment_size]
 
       # try to split at punctuation
       split_idx = __class__.findLastCharIndexMatching(cur_text,
@@ -117,7 +117,7 @@ class Speech:
                                                         lambda x: not (unicodedata.category(x)[0] in ("L", "N")))
       if split_idx is None:
         # split at the last char
-        split_idx = __class__.MAX_SEGMENT_SIZE - 1
+        split_idx = max_segment_size - 1
 
       new_segment = cur_text[:split_idx + 1].rstrip()
       segments.append(new_segment)
@@ -239,7 +239,14 @@ class SpeechSegment:
     cmd = ["sox", "-q", "-t", "mp3", "-"]
     if sys.platform.startswith("win32"):
       cmd.extend(("-t", "waveaudio"))
-    cmd.extend(("-d", "trim", "0.1", "reverse", "trim", "0.07", "reverse"))  # "trim", "0.25", "-0.1"
+
+    #uses the default output device by default
+    #If this fails with the error message "sox FAIL sox: Sorry, there is no default audio device configured",
+    #replace it with an option to explicitly specify the output device (e.g. `cmd.extend(("-t", "coreaudio", "My Speaker"))`).
+    #To list the available devices, see https://superuser.com/questions/1506208/sox-how-to-specify-audio-input-and-audio-output-devices-on-osx.
+    cmd.extend(("-d",))
+
+    cmd.extend(("trim", "0.1", "reverse", "trim", "0.07", "reverse"))  # "trim", "0.25", "-0.1"
     cmd.extend(sox_effects)
     logging.getLogger().debug("Start player process")
     p = subprocess.Popen(cmd,
@@ -277,6 +284,14 @@ class SpeechSegment:
     response.raise_for_status()
     return response.content
 
+def check_positive(s: str) -> int:
+  try:
+    v = int(s)
+  except:
+    raise argparse.ArgumentTypeError(f'{s} is an invalid positive int value')
+  if (v < 1):
+    raise argparse.ArgumentTypeError(f'{s} is an invalid positive int value')
+  return v
 
 def cl_main():
   # parse args
@@ -296,6 +311,12 @@ def cl_main():
                           nargs="+",
                           dest="sox_effects",
                           help="SoX effect command to pass to SoX's play")
+  arg_parser.add_argument("-s",
+                          "--max-segment-size",
+                          default=100,
+                          type=check_positive,
+                          dest="max_segment_size",
+                          help="Splits text into segments per this number of Unicode characters")
   arg_parser.add_argument("-v",
                           "--verbosity",
                           choices=("warning", "normal", "debug"),
@@ -330,7 +351,7 @@ def cl_main():
     exit(1)
 
   # do the job
-  speech = Speech(args.speech, args.lang)
+  speech = Speech(args.speech, args.lang, args.max_segment_size)
   if args.output:
     speech.save(args.output)
   else:
