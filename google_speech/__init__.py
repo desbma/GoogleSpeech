@@ -2,7 +2,7 @@
 
 """ Read a text using Google Translate TTS API. """
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 __author__ = "desbma"
 __license__ = "LGPLv2"
 
