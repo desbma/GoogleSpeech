@@ -65,9 +65,9 @@ On Unix systems, with Bash and pipes, you can be creative:
 
   `for i in {10..0}; do ( google_speech $i & ); sleep 1s; done`
 
-- Read a Chuck Norris joke:
+- Read a joke:
 
-  `curl -s http://api.icndb.com/jokes/random/ | python3 -c 'import html.parser, json, sys; print(html.parser.HTMLParser().unescape(json.load(sys.stdin)["value"]["joke"]))' | google_speech -`
+  `curl -s 'https://v2.jokeapi.dev/joke/Any?type=single' | python3 -c 'import json, sys; print(json.load(sys.stdin)["joke"])' | google_speech -`
 
 ## Python usage
 
