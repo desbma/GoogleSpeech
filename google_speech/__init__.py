@@ -58,7 +58,7 @@ class Speech:
   """ Text to be read. """
 
   CLEAN_MULTIPLE_SPACES_REGEX = re.compile("\s{2,}")
-  MAX_SEGMENT_SIZE = 100
+  MAX_SEGMENT_SIZE = 200
 
   def __init__(self, text, lang):
     self.text = self.cleanSpaces(text)
