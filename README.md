@@ -1,7 +1,7 @@
 # Google Speech
 
 [![Latest version](https://img.shields.io/pypi/v/google_speech.svg?style=flat)](https://pypi.python.org/pypi/google_speech/)
-[![Tests status](https://img.shields.io/travis/desbma/GoogleSpeech/master.svg?label=tests&style=flat)](https://travis-ci.org/desbma/GoogleSpeech)
+[![Tests status](https://github.com/desbma/GoogleSpeech/actions/workflows/ci.yml/badge.svg)](https://github.com/desbma/GoogleSpeech/actions)
 [![Coverage](https://img.shields.io/coveralls/desbma/GoogleSpeech/master.svg?style=flat)](https://coveralls.io/github/desbma/GoogleSpeech?branch=master)
 [![Supported Python versions](https://img.shields.io/pypi/pyversions/google_speech.svg?style=flat)](https://pypi.python.org/pypi/google_speech/)
 [![License](https://img.shields.io/github/license/desbma/GoogleSpeech.svg?style=flat)](https://github.com/desbma/GoogleSpeech/blob/master/LICENSE)
